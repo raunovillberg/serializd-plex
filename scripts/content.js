@@ -128,7 +128,8 @@ async function processTVShowPage(trigger = "unknown") {
     let url = buildSerializdUrl(showTmdbId, seasonTmdbId, seasonNum, episodeNum);
     const hasSeasonContext = seasonNum !== null;
     const canUseCachedSeasonUrl = !hasSeasonContext || !!seasonTmdbId;
-    if (cached && cached.rating && !isExpired(cached, CACHE_TTL) && canUseCachedSeasonUrl) {
+    const cachedMatchesResolvedShow = !cached?.tmdbId || cached.tmdbId === showTmdbId;
+    if (cached && cached.rating && !isExpired(cached, CACHE_TTL) && canUseCachedSeasonUrl && cachedMatchesResolvedShow) {
       if (isStaleRun()) {
         return;
       }
@@ -246,9 +247,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (validatedToken) {
       lastKnownPlexToken = validatedToken;
     }
+    if (message.url) {
+      window.__LAST_PLEX_API_URL__ = message.url;
+    }
     const isUsableServer = message.serverUrl && isValidPlexServerUrl(message.serverUrl);
     if (isUsableServer) {
-      window.__LAST_PLEX_API_URL__ = message.url;
       interceptedPlexServer = {
         url: message.serverUrl,
         token: validatedToken,
