@@ -1,3 +1,7 @@
 .idea
 .DS_Store
 web-ext-artifacts
+.devlogs
+node_modules
+serializd-plex-v*.zip
+learnings/

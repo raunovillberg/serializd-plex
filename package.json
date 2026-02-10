@@ -1,0 +1,16 @@
+{
+  "name": "serializd-plex",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:dev": "node scripts/build.mjs --mode=dev",
+    "build:dev:relay": "node scripts/build.mjs --mode=dev --relay",
+    "build:prod": "node scripts/build.mjs --mode=prod",
+    "verify:prod": "node scripts/verify-prod.mjs",
+    "package:prod": "node scripts/package-prod.mjs",
+    "release": "npm run build:prod && npm run verify:prod && npm run package:prod"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}
