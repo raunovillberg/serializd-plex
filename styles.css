@@ -18,7 +18,7 @@
     width: fit-content;
     height: 26px;
     margin: auto;
-    align-items: baseline;
+    align-items: center;
 }
 
 .serializd-logo {
@@ -34,4 +34,21 @@
 /* Hover effect - matches Plexboxd behavior */
 .serializd-rating-container:hover .serializd-rating {
     color: #FF8000;
+}
+
+/* Fallback injection location for pages without metadata-ratings container */
+.serializd-fallback-container {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.serializd-link-wrapper {
+    display: inline-flex;
+}
+
+/* Inline placement used for season/episode headers */
+.serializd-link-wrapper.serializd-inline-wrapper {
+    margin-left: 10px;
+    vertical-align: middle;
 }
