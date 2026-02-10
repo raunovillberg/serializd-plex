@@ -278,8 +278,9 @@ async function processTVShowPage(trigger = 'unknown') {
 
     const hasSeasonContext = seasonNum !== null;
     const canUseCachedSeasonUrl = !hasSeasonContext || !!seasonTmdbId;
+    const cachedMatchesResolvedShow = !cached?.tmdbId || cached.tmdbId === showTmdbId;
 
-    if (cached && cached.rating && !isExpired(cached, CACHE_TTL) && canUseCachedSeasonUrl) {
+    if (cached && cached.rating && !isExpired(cached, CACHE_TTL) && canUseCachedSeasonUrl && cachedMatchesResolvedShow) {
       DEV_DEBUG: logIdExtractionDebug('cache-hit', {
         title,
         year: normalizedYear,
@@ -571,11 +572,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       lastKnownPlexToken = validatedToken;
     }
 
+    // Keep latest metadata request URL even when server URL itself is not usable.
+    // Fallback key extraction may depend on this when the route lacks key= in location.
+    if (message.url) {
+      window.__LAST_PLEX_API_URL__ = message.url;
+    }
+
     const isUsableServer = message.serverUrl && isValidPlexServerUrl(message.serverUrl);
 
     if (isUsableServer) {
-      window.__LAST_PLEX_API_URL__ = message.url;
-
       interceptedPlexServer = {
         url: message.serverUrl,
         token: validatedToken,
