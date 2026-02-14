@@ -41,7 +41,7 @@ describe('Extension Reload Resilience', function () {
 
     // Navigate to page and verify initial state
     await browser.url(SHOW_URL);
-    await waitForReadiness();
+    const beforeReloadMarker = await waitForReadiness();
 
     // Verify page is functional before reload
     const pageInfoBefore = await browser.execute(() => ({
@@ -53,8 +53,12 @@ describe('Extension Reload Resilience', function () {
     // Reload extension
     await reloadExtension();
 
-    // Readiness marker should reappear
-    const marker = await waitForReadiness(15000);
+    // Readiness marker should be freshly re-emitted after reload
+    const marker = await waitForReadiness({
+      timeoutMs: 15000,
+      afterTs: beforeReloadMarker.ts,
+      expectedHrefIncludes: '/web/show'
+    });
 
     assert.ok(marker, 'Readiness marker should reappear after reload');
     assert.ok(marker.version, 'Marker should have version');
@@ -66,13 +70,17 @@ describe('Extension Reload Resilience', function () {
     this.timeout(20000);
 
     await browser.url(SHOW_URL);
-    await waitForReadiness();
+    const beforeReloadMarker = await waitForReadiness();
 
     // Reload extension
     await reloadExtension();
 
-    // Wait for readiness
-    await waitForReadiness(15000);
+    // Wait for fresh readiness after reload
+    await waitForReadiness({
+      timeoutMs: 15000,
+      afterTs: beforeReloadMarker.ts,
+      expectedHrefIncludes: '/web/show'
+    });
 
     // Page should still be functional
     const pageInfo = await browser.execute(() => ({
@@ -91,13 +99,17 @@ describe('Extension Reload Resilience', function () {
 
     // Load page
     await browser.url(SHOW_URL);
-    await waitForReadiness();
+    const beforeRefreshMarker = await waitForReadiness();
 
     // Refresh page
     await browser.refresh();
 
-    // Should work normally after refresh
-    const marker = await waitForReadiness(10000);
+    // Should work normally after refresh with a fresh marker
+    const marker = await waitForReadiness({
+      timeoutMs: 10000,
+      afterTs: beforeRefreshMarker.ts,
+      expectedHrefIncludes: '/web/show'
+    });
     assert.ok(marker, 'Readiness marker should appear after refresh');
 
     const pageInfo = await browser.execute(() => ({

@@ -25,6 +25,7 @@ const rootDir = path.resolve(__dirname, '../..');
 const rawDir = path.join(rootDir, 'tests/fixtures/raw');
 const plexDir = path.join(rootDir, 'tests/fixtures/plex');
 const xmlDir = path.join(plexDir, 'xml');
+const idMapPath = path.join(rawDir, 'id-map.json');
 
 // Configuration
 const PLACEHOLDER_TOKEN = 'FIXTURE-TOKEN-PLACEHOLDER';
@@ -278,6 +279,7 @@ function generateFixtures(harFiles) {
   const routes = {};
   const pages = {};
   const scenarios = new Set();
+  const stablePathToOriginalPath = {};
 
   // First pass: collect all metadata and build ID mapping
   const allMetadata = [];
@@ -310,6 +312,10 @@ function generateFixtures(harFiles) {
     const originalId = pathMatch[1];
     const stableId = getStableId(originalId);
     const stablePath = `/library/metadata/${stableId}`;
+
+    if (!stablePathToOriginalPath[stablePath]) {
+      stablePathToOriginalPath[stablePath] = item.originalPath;
+    }
 
     // Generate filename
     const filename = `${contentType}-${stableId}.xml`;
@@ -389,6 +395,16 @@ function generateFixtures(harFiles) {
     'utf8'
   );
   console.log('  ✓ Wrote manifest.json');
+
+  // Write local-only stable->original ID/path mapping for drift checks.
+  // Stored under tests/fixtures/raw/ (gitignored) to avoid committing live IDs.
+  const idMap = {
+    generatedAt: new Date().toISOString(),
+    sourceHarFiles: harFiles,
+    stablePathToOriginalPath
+  };
+  fs.writeFileSync(idMapPath, JSON.stringify(idMap, null, 2) + '\n', 'utf8');
+  console.log('  ✓ Wrote raw/id-map.json (local-only mapping for drift-check)');
 
   console.log(`\n✓ Generated fixtures for ${Object.keys(routes).length} metadata entries\n`);
 }

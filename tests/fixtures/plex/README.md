@@ -115,6 +115,8 @@ npm run fixtures:capture
 
 # 2. Generate sanitized fixtures from HAR
 npm run fixtures:generate
+
+#    (also writes tests/fixtures/raw/id-map.json for local drift checks)
 ```
 
 ## Drift Check
@@ -126,6 +128,8 @@ PLEX_SERVER_URL=http://192.168.1.100:32400 PLEX_TOKEN=your-token npm run fixture
 ```
 
 This compares the **structure** (attribute names, element names) of your fixtures against live Plex responses. It does NOT compare values.
+
+`fixtures:drift-check` uses `tests/fixtures/raw/id-map.json` (gitignored) to map sanitized fixture IDs back to your live Plex metadata keys.
 
 **What it detects:**
 - New attributes added by Plex
