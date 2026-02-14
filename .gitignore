@@ -7,3 +7,8 @@ node_modules
 serializd-plex-v*.zip
 learnings/
 tests/fixtures/raw/
+
+# Build outputs
+manifest.json
+scripts/content.js
+scripts/background.js
