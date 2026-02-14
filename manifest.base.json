@@ -50,12 +50,13 @@
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
     "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
     "128": "icons/icon-128.png"
   },
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/icon-16.png"
+        "icons/plex-icon-16.png"
       ],
       "matches": [
         "https://app.plex.tv/*",

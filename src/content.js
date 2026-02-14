@@ -1376,7 +1376,7 @@ function injectSerializdLink(data) {
   }
 
   const logo = document.createElement('img');
-  logo.src = chrome.runtime.getURL('icons/icon-16.png');
+  logo.src = chrome.runtime.getURL('icons/plex-icon-16.png');
   logo.setAttribute('width', '16px');
   logo.setAttribute('height', '16px');
   logo.classList.add('serializd-logo');
