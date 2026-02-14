@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaContainer size="1">
+  <Directory
+    ratingKey="19901"
+    key="/library/metadata/19901"
+    guid="tmdb://9999"
+    type="show"
+    title="Malformed XML Test"
+    year="2024"
+  >
+    <!-- This XML is intentionally malformed - unclosed tag below -->
+    <Guid id="tmdb://9999"
+</MediaContainer>

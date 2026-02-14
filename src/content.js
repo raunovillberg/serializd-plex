@@ -11,6 +11,7 @@ const MAX_CACHE_ENTRIES = 50; // Maximum number of server entries to cache
 const DEBUG_ID_EXTRACTION = __DEV__;
 const DEBUG_NAVIGATION = __DEV__;
 const DEBUG_LOG_RELAY = __DEV_RELAY__;
+const TEST_HOOKS_ENABLED = __TEST_HOOKS__;
 const RETRY_DELAYS_MS = [350, 900, 1800]; // Retry window for timing-sensitive UI/data availability
 
 function redactSensitiveForLog(str) {
@@ -71,6 +72,8 @@ async function init() {
       // URL changed in Plex SPA; ensure we re-process even if title/year key collides.
       lastProcessedKey = null;
       clearRetryState('mutation-url-change');
+      // Update readiness marker on SPA navigation
+      setReadinessMarker();
     }
 
     processTVShowPage(hrefChanged ? 'mutation-url-change' : 'mutation-dom-change');
@@ -91,6 +94,7 @@ async function init() {
     lastObservedHref = currentHref;
     lastProcessedKey = null;
     clearRetryState('hashchange');
+    setReadinessMarker();
     processTVShowPage('hashchange');
   });
 
@@ -104,8 +108,12 @@ async function init() {
     lastObservedHref = currentHref;
     lastProcessedKey = null;
     clearRetryState('popstate');
+    setReadinessMarker();
     processTVShowPage('popstate');
   });
+
+  // Set initial readiness marker for E2E tests
+  setReadinessMarker();
 }
 
 async function processTVShowPage(trigger = 'unknown') {
@@ -1472,6 +1480,37 @@ function debounce(func, wait) {
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
+}
+
+function getExtensionVersionForMarker() {
+  try {
+    return globalThis?.chrome?.runtime?.getManifest?.()?.version || 'unknown';
+  } catch (_error) {
+    return 'unknown';
+  }
+}
+
+/**
+ * Set the readiness marker for E2E tests.
+ * Only active when TEST_HOOKS_ENABLED is true (dev/test builds with --test-hooks flag).
+ * Marker format: { version, ts, href }
+ */
+function setReadinessMarker() {
+  TEST_HOOKS: {
+    if (!TEST_HOOKS_ENABLED) return;
+
+    const marker = {
+      version: getExtensionVersionForMarker(),
+      ts: Date.now(),
+      href: window.location.href
+    };
+
+    // Content-script realm marker (useful in extension context)
+    window.__SERIALIZD_PLEX_READY__ = marker;
+
+    // Page-visible marker for WebDriver assertions (Firefox content script runs in isolated realm)
+    document.documentElement.setAttribute('data-serializd-plex-ready', JSON.stringify(marker));
+  }
 }
 
 if (document.readyState === 'loading') {

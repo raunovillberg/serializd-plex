@@ -1,0 +1,11 @@
+{
+  "fixtureVersion": "1.0.0",
+  "generated": "2026-02-13T00:00:00.000Z",
+  "source": "har-capture",
+  "scenarios": [
+    "episode",
+    "season",
+    "show"
+  ],
+  "idMappingSize": 3
+}

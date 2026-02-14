@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaContainer size="1">
+  <Video ratingKey="10003" parentRatingKey="10002" grandparentRatingKey="10001" key="/library/metadata/10003" guid="tmdb://62085" parentGuid="tmdb://1573" grandparentGuid="tmdb://1396" type="episode" title="Pilot" year="2008" index="1" parentIndex="1" grandparentTitle="Breaking Bad" parentTitle="Season 1">
+    <Guid id="tmdb://62085" />
+  </Video>
+</MediaContainer>

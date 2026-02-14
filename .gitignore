@@ -3,5 +3,7 @@
 web-ext-artifacts
 .devlogs
 node_modules
+.tmp
 serializd-plex-v*.zip
 learnings/
+tests/fixtures/raw/
