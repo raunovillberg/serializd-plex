@@ -28,32 +28,68 @@ export async function getMetrics() {
 }
 
 /**
- * Wait for extension readiness marker
+ * Read readiness marker from DOM (page-visible mirror set by content script)
  */
-export async function waitForReadiness(timeoutMs = READINESS_TIMEOUT_MS) {
-  await browser.waitUntil(async () => {
-    const markerJson = await browser.execute(() =>
-      document.documentElement.getAttribute('data-serializd-plex-ready')
-    );
-
-    if (!markerJson) return false;
+export async function getReadinessMarker() {
+  return await browser.execute(() => {
+    const markerJson = document.documentElement.getAttribute('data-serializd-plex-ready');
+    if (!markerJson) return null;
 
     try {
-      const marker = JSON.parse(markerJson);
-      return !!(marker && marker.version && marker.ts && marker.href);
+      return JSON.parse(markerJson);
     } catch {
+      return null;
+    }
+  });
+}
+
+function normalizeReadinessWaitOptions(optionsOrTimeoutMs = READINESS_TIMEOUT_MS) {
+  if (typeof optionsOrTimeoutMs === 'number') {
+    return {
+      timeoutMs: optionsOrTimeoutMs,
+      afterTs: null,
+      expectedHrefIncludes: null
+    };
+  }
+
+  return {
+    timeoutMs: optionsOrTimeoutMs?.timeoutMs ?? READINESS_TIMEOUT_MS,
+    afterTs: optionsOrTimeoutMs?.afterTs ?? null,
+    expectedHrefIncludes: optionsOrTimeoutMs?.expectedHrefIncludes ?? null
+  };
+}
+
+/**
+ * Wait for extension readiness marker.
+ *
+ * options:
+ * - timeoutMs: max wait duration
+ * - afterTs: require marker.ts to be strictly newer than this timestamp
+ * - expectedHrefIncludes: require marker.href to include this substring
+ */
+export async function waitForReadiness(optionsOrTimeoutMs = READINESS_TIMEOUT_MS) {
+  const { timeoutMs, afterTs, expectedHrefIncludes } = normalizeReadinessWaitOptions(optionsOrTimeoutMs);
+
+  await browser.waitUntil(async () => {
+    const marker = await getReadinessMarker();
+    if (!marker || !marker.version || !marker.ts || !marker.href) return false;
+
+    if (afterTs !== null && Number(marker.ts) <= Number(afterTs)) {
       return false;
     }
+
+    if (expectedHrefIncludes && !String(marker.href).includes(expectedHrefIncludes)) {
+      return false;
+    }
+
+    return true;
   }, {
     timeout: timeoutMs,
     interval: READINESS_POLL_MS,
     timeoutMsg: 'Readiness marker was not set within timeout'
   });
 
-  return await browser.execute(() => {
-    const markerJson = document.documentElement.getAttribute('data-serializd-plex-ready');
-    return markerJson ? JSON.parse(markerJson) : null;
-  });
+  return await getReadinessMarker();
 }
 
 /**
