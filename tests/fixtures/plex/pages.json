@@ -1,0 +1,44 @@
+{
+  "show": {
+    "path": "/web/show",
+    "title": "Breaking Bad",
+    "year": "2008",
+    "metadataKey": "/library/metadata/10001"
+  },
+  "season": {
+    "path": "/web/season",
+    "title": "Season 1",
+    "year": "2008",
+    "metadataKey": "/library/metadata/10002"
+  },
+  "episode": {
+    "path": "/web/episode",
+    "title": "Pilot",
+    "year": "2008",
+    "metadataKey": "/library/metadata/10003"
+  },
+  "malformed": {
+    "path": "/web/malformed",
+    "title": "Malformed XML Test",
+    "year": "2024",
+    "metadataKey": "/library/metadata/19901"
+  },
+  "error500": {
+    "path": "/web/error500",
+    "title": "HTTP 500 Test",
+    "year": "2024",
+    "metadataKey": "/library/metadata/19902"
+  },
+  "error401": {
+    "path": "/web/error401",
+    "title": "HTTP 401 Test",
+    "year": "2024",
+    "metadataKey": "/library/metadata/19903"
+  },
+  "slow": {
+    "path": "/web/slow",
+    "title": "Slow Response Test",
+    "year": "2024",
+    "metadataKey": "/library/metadata/19904"
+  }
+}

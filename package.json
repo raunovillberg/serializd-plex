@@ -5,12 +5,30 @@
   "scripts": {
     "build:dev": "node scripts/build.mjs --mode=dev",
     "build:dev:relay": "node scripts/build.mjs --mode=dev --relay",
+    "build:dev:test": "node scripts/build.mjs --mode=dev --test-hooks",
     "build:prod": "node scripts/build.mjs --mode=prod",
     "verify:prod": "node scripts/verify-prod.mjs",
     "package:prod": "node scripts/package-prod.mjs",
-    "release": "npm run build:prod && npm run verify:prod && npm run package:prod"
+    "release": "npm run build:prod && npm run verify:prod && npm run package:prod",
+    "e2e:pack-addon": "node scripts/e2e/build-test-xpi.mjs",
+    "test:e2e": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/smoke.spec.js --spec tests/e2e/show-injection.spec.js --spec tests/e2e/season-episode-url.spec.js --spec tests/e2e/spa-reinjection.spec.js --spec tests/e2e/retry-late-metadata.spec.js --spec tests/e2e/error-malformed-xml.spec.js --spec tests/e2e/error-http-status.spec.js --spec tests/e2e/error-slow-response.spec.js --spec tests/e2e/resilience-extension-reload.spec.js",
+    "test:e2e:smoke": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/smoke.spec.js",
+    "test:e2e:show": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/show-injection.spec.js",
+    "test:e2e:season": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/season-episode-url.spec.js",
+    "test:e2e:spa": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/spa-reinjection.spec.js",
+    "test:e2e:retry": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/retry-late-metadata.spec.js",
+    "test:e2e:error": "npm run build:dev:test && npm run e2e:pack-addon && wdio run tests/wdio.conf.mjs --spec tests/e2e/error-malformed-xml.spec.js --spec tests/e2e/error-http-status.spec.js --spec tests/e2e/error-slow-response.spec.js --spec tests/e2e/resilience-extension-reload.spec.js",
+    "fixture-server": "node tests/fixture-server.mjs",
+    "fixtures:capture": "node scripts/e2e/fixtures-capture.mjs",
+    "fixtures:generate": "node scripts/e2e/fixtures-generate.mjs",
+    "fixtures:drift-check": "node scripts/e2e/fixtures-drift-check.mjs"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "@wdio/cli": "^9.0.0",
+    "@wdio/local-runner": "^9.0.0",
+    "@wdio/mocha-framework": "^9.0.0",
+    "@wdio/spec-reporter": "^9.0.0",
+    "axios": "^1.7.0",
+    "esbuild": "^0.27.3"
   }
 }

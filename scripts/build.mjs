@@ -17,22 +17,30 @@ function getArg(name) {
 
 const modeArg = getArg('--mode') || 'dev';
 if (!['dev', 'prod'].includes(modeArg)) {
-  console.error('Usage: node scripts/build.mjs --mode=<dev|prod> [--relay]');
+  console.error('Usage: node scripts/build.mjs --mode=<dev|prod> [--relay] [--test-hooks]');
   process.exit(1);
 }
 
 const isProd = modeArg === 'prod';
 const relayRequested = process.argv.includes('--relay');
 const relayEnabled = !isProd && relayRequested;
+const testHooksRequested = process.argv.includes('--test-hooks');
+const testHooksEnabled = !isProd && testHooksRequested;
 
 if (isProd && relayRequested) {
   console.error('Refusing to build prod bundle with relay enabled.');
   process.exit(1);
 }
 
+if (isProd && testHooksRequested) {
+  console.error('Refusing to build prod bundle with test hooks enabled.');
+  process.exit(1);
+}
+
 const define = {
   __DEV__: isProd ? 'false' : 'true',
-  __DEV_RELAY__: relayEnabled ? 'true' : 'false'
+  __DEV_RELAY__: relayEnabled ? 'true' : 'false',
+  __TEST_HOOKS__: testHooksEnabled ? 'true' : 'false'
 };
 
 const commonBuildOptions = {
@@ -44,7 +52,7 @@ const commonBuildOptions = {
   sourcemap: isProd ? false : 'inline',
   legalComments: 'none',
   define,
-  dropLabels: isProd ? ['DEV_DEBUG', 'DEV_RELAY'] : [],
+  dropLabels: isProd ? ['DEV_DEBUG', 'DEV_RELAY', 'TEST_HOOKS'] : [],
   logLevel: 'info'
 };
 

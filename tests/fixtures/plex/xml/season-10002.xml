@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MediaContainer size="1">
+  <Directory ratingKey="10002" parentRatingKey="10001" key="/library/metadata/10002" guid="tmdb://1573" parentGuid="tmdb://1396" type="season" title="Season 1" year="2008" index="1" parentTitle="Breaking Bad">
+    <Guid id="tmdb://1573" />
+  </Directory>
+</MediaContainer>

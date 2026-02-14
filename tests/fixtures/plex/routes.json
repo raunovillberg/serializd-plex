@@ -1,0 +1,41 @@
+{
+  "/library/metadata/10001": {
+    "fixture": "show-10001.xml",
+    "scenario": "show",
+    "title": "Breaking Bad",
+    "year": "2008"
+  },
+  "/library/metadata/10002": {
+    "fixture": "season-10002.xml",
+    "scenario": "season",
+    "title": "Season 1",
+    "year": "2008"
+  },
+  "/library/metadata/10003": {
+    "fixture": "episode-10003.xml",
+    "scenario": "episode",
+    "title": "Pilot",
+    "year": "2008"
+  },
+  "/library/metadata/19901": {
+    "fixture": "malformed-19901.xml",
+    "scenario": "malformed",
+    "title": "Malformed XML Test"
+  },
+  "/library/metadata/19902": {
+    "scenario": "error500",
+    "errorStatus": 500,
+    "errorBody": { "error": "Internal Server Error" }
+  },
+  "/library/metadata/19903": {
+    "scenario": "error401",
+    "errorStatus": 401,
+    "errorBody": { "error": "Unauthorized" }
+  },
+  "/library/metadata/19904": {
+    "fixture": "slow-19904.xml",
+    "scenario": "slow",
+    "title": "Slow Response Test",
+    "latencyMs": 3000
+  }
+}
