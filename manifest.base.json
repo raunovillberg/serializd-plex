@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Serializd-Plex",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "When using Plex on the web via app.plex.tv or locally, a badge with a Serializd rating (clickable link!) is shown on your TV show page.",
   "browser_specific_settings": {
     "gecko": {

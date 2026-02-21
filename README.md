@@ -2,6 +2,8 @@
 
 Firefox extension that adds [Serializd](https://serializd.com) links/ratings to Plex TV show, season, and episode pages.
 
+[Now officially available as a Firefox Add-on!](https://addons.mozilla.org/en-US/firefox/addon/serializd-plex/) 
+
 ![Screenshot showing Serializd rating displayed on a Plex title page](screenshots/screenshot.png)
 
 > Major inspiration by [Plexboxd](https://github.com/lennysgarage/Plexboxd/tree/firefox)!
